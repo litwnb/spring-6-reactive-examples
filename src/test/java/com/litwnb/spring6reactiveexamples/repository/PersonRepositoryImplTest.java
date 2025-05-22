@@ -7,8 +7,6 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class PersonRepositoryImplTest {
     PersonRepository repository = new PersonRepositoryImpl();
 
@@ -68,5 +66,20 @@ class PersonRepositoryImplTest {
 
         listMono.subscribe(list ->
                 list.forEach(person -> System.out.println(person.getFirstName())));
+    }
+
+    @Test
+    void testFilterOnName() {
+        repository.findAll()
+                .filter(person -> person.getFirstName().equals("Pam"))
+                .subscribe(person -> System.out.println(person.getFirstName()));
+    }
+
+    @Test
+    void testGetById() {
+        Mono<Person> pamMono = repository.findAll()
+                .filter(person -> person.getFirstName().equals("Pam")).next();
+
+        pamMono.subscribe(person -> System.out.println(person.getFirstName()));
     }
 }
